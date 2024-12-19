@@ -1,5 +1,6 @@
-import { Component, viewChildren } from '@angular/core';
+import { Component, computed, inject, viewChildren } from '@angular/core';
 import { CalculatorButtonComponent } from '../calculator-button/calculator-button.component';
+import { CalculatorService } from '@/calculator/services/calculator.service';
 
 @Component({
   selector: 'calculator',
@@ -18,11 +19,16 @@ import { CalculatorButtonComponent } from '../calculator-button/calculator-butto
 })
 export class CalculatorComponent {
 
-  public calculatorsButtons = viewChildren( CalculatorButtonComponent );
+  private calculatorService = inject(CalculatorService);
 
+  public calculatorsButtons = viewChildren( CalculatorButtonComponent );
   public handleClick(key: string): void {
     console.log({ key });
   }
+
+  public subResultText = computed( () => this.calculatorService.subResultText() );
+  public resultText = computed( () => this.calculatorService.resultText() );
+  public lastOperator = computed( () => this.calculatorService.lastOperator() );
 
   // @HostListener('document:keyup', ['$event'])
   public handleKeyboardEvent( event: KeyboardEvent ): void {

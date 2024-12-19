@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, ElementRef, HostBinding, input, output, signal, viewChild } from '@angular/core';
+import { booleanAttribute, Component, ElementRef,  input, output, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'calculator-button',
