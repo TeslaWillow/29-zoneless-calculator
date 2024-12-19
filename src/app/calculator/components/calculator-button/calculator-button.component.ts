@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { booleanAttribute, Component, ElementRef, HostBinding, input, output, signal, viewChild } from '@angular/core';
 
 @Component({
@@ -6,7 +7,9 @@ import { booleanAttribute, Component, ElementRef, HostBinding, input, output, si
   templateUrl: './calculator-button.component.html',
   styleUrl: './calculator-button.component.css',
   host: {
-    class: 'w-1/4 border-r border-b border-indigo-400',
+    class: 'order-r border-b border-indigo-400',
+    '[class.w-2/4]': 'isDoubleSize()',
+    '[class.w-1/4]': '!isDoubleSize()',
   },
 })
 export class CalculatorButtonComponent {
@@ -16,10 +19,6 @@ export class CalculatorButtonComponent {
   public isDoubleSize = input(false, { transform: booleanAttribute });
   public onClick      = output<string>();
   public isPressed    = signal(false);
-
-  @HostBinding('class.w-2/4') get commandStyle() {
-    return this.isDoubleSize();
-  }
 
   public handleClick(): void {
     if(!this.contentValue()?.nativeElement) return;
