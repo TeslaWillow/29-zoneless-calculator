@@ -1,6 +1,9 @@
 <button
+  #button
   class="button-calculator"
   [class.is-command]="isCommand()"
+  [class.is-pressed]="isPressed()"
+  (click)="handleClick();"
 >
   <ng-content />
 </button>
