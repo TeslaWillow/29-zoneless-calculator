@@ -9,22 +9,12 @@ import { CalculatorService } from '@/calculator/services/calculator.service';
   host: {
     '(document:keyup)': 'handleKeyboardEvent($event)',
   }
-  /*
-     styles: `
-      .is-command {
-        @apply bg-indigo-700 bg-opacity-20;
-      }
-    `
-  */
 })
 export class CalculatorComponent {
 
   private calculatorService = inject(CalculatorService);
 
   public calculatorsButtons = viewChildren( CalculatorButtonComponent );
-  public handleClick(key: string): void {
-    console.log({ key });
-  }
 
   public subResultText = computed( () => this.calculatorService.subResultText() );
   public resultText = computed( () => this.calculatorService.resultText() );
@@ -47,6 +37,11 @@ export class CalculatorComponent {
     this.calculatorsButtons().forEach( (button) => {
       button.keyboardPressedStyle(keyValue);
     });
+  }
+
+  public handleClick(key: string): void {
+    console.log({key});
+    this.calculatorService.constructNumber(key);
   }
 
 }

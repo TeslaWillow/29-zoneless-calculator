@@ -15,6 +15,7 @@ export class CalculatorService {
   public lastOperator  = signal('+');
 
   public constructNumber( value: string ): void {
+    debugger;
     // Validate input
     if( ![...numbers, ...operators, ...specialOperators].includes(value) ) return;
 
@@ -52,16 +53,54 @@ export class CalculatorService {
       this.resultText.set('0');
     }
 
-    // Decimal
-    if( value === '.' && !this.resultText().includes('0') ){
-      if( this.resultText() === '0' || this.resultText() === '' ) {
-        this.resultText.update( t => t + '0.' );
-      }
+    // Limit char lenght
+    if( this.resultText().length >= 10 ) {
+      console.info("Max lenght reached");
       return;
     }
 
-    this.resultText.update( t => t + '.' );
-    return;
+    // Decimal
+    if( value === '.' && !this.resultText().includes('.') ){
+      if( this.resultText() === '0' || this.resultText() === '' ) {
+        this.resultText.set( '0.' );
+        return;
+      }
+      this.resultText.update( t => t + '.' );
+      return;
+    }
+
+    // Handle first 0
+    if ( value === '0' && (this.resultText() === '0' || this.resultText() === '-0') ) {
+      return;
+    }
+
+    // Change signal
+    if( value === '+/-' ){
+      // Remove minus
+      if( this.resultText().includes('-')){
+        this.resultText.update( t => t.slice(1) );
+        return;
+      }
+      // Add minus
+      this.resultText.update( t => '-' + t );
+    }
+
+    // Numbers
+    if( numbers.includes(value) ){
+
+      if( this.resultText() === '0' ){
+        this.resultText.set(value);
+        return;
+      }
+
+      if( this.resultText().includes('-0') ){
+        this.resultText.set('-' + value);
+        return;
+      }
+
+      this.resultText.update( t => t + value );
+      return;
+    }
 
   }
 }
