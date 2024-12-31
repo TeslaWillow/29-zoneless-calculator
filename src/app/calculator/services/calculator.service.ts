@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 
 
 const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const operators = ['+', '-', '*', '/'];
+const operators = ['+', '-', '*', '/', '⨉', '÷'];
 const specialOperators = ['+/-', '%', '.', '=', 'C', 'Backspace'];
 
 @Injectable({
@@ -15,13 +15,12 @@ export class CalculatorService {
   public lastOperator  = signal('+');
 
   public constructNumber( value: string ): void {
-    debugger;
     // Validate input
     if( ![...numbers, ...operators, ...specialOperators].includes(value) ) return;
 
     if( value === '=' ){
       // Calculate
-      console.log('Calculate result');
+      this.calculateResult();
       return;
     }
 
@@ -36,6 +35,11 @@ export class CalculatorService {
     if( value === 'Backspace' ) {
       if(this.resultText() === '0') return;
 
+      if(this.resultText().includes('-') && this.resultText().length == 2){
+        this.resultText.set('0');
+        return;
+      }
+
       if(this.resultText().length == 1) {
         this.resultText.set('0');
         return;
@@ -48,6 +52,8 @@ export class CalculatorService {
     }
 
     if( operators.includes(value) ) {
+      // this.calculateResult();
+
       this.lastOperator.set(value);
       this.subResultText.set( this.resultText() );
       this.resultText.set('0');
@@ -103,4 +109,31 @@ export class CalculatorService {
     }
 
   }
+
+  public calculateResult(): void {
+    const number1 = parseFloat( this.subResultText() );
+    const number2 = parseFloat( this.resultText() );
+
+    let result = 0;
+    switch ( this.lastOperator() ) {
+      case '+':
+        result = number1 + number2;
+        break;
+      case '-':
+        result = number1 - number2;
+        break;
+      case '*':
+      case '⨉':
+        result = number1 * number2;
+        break;
+      case '/':
+      case '÷':
+        result = number1 / number2;
+        break;
+    }
+
+    this.resultText.set( result.toString() );
+    this.subResultText.set('0');
+  }
+
 }
